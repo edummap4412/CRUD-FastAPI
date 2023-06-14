@@ -1,9 +1,9 @@
 from sqlalchemy.orm import Session
-from model import Book
-from schemas import BookSchema
+from model import Book, RegisterClient
+from schemas import BookSchema, RegisterSchema
 
 
-def get_book(db: Session, skip: int = 0, limit: int = 100):
+def get_book(db: Session, skip: int = 0, limit: int = 10):
     return db.query(Book).offset(skip).limit(limit).all()
 
 
@@ -32,4 +32,12 @@ def update_book(db: Session, book_id: int, title: str, description: str):
     db.commit()
     db.refresh(_book)
     return _book
+
+
+def register_client(db: Session, register: RegisterSchema):
+    _register_client = RegisterClient(name=register.name, email=register.email, tax_id=register.tax_id)
+    db.add(_register_client)
+    db.commit()
+    db.refresh(_register_client)
+    return _register_client
 

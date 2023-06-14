@@ -14,8 +14,22 @@ class BookSchema(BaseModel):
         orm_mode = True
 
 
+class RegisterSchema(BaseModel):
+    id: Optional[int] = None
+    name:  Optional[str] = None
+    email:  Optional[str] = None
+    tax_id:  Optional[str] = None
+
+    class Config:
+        orm_mode = True
+
+
 class RequestBook(BaseModel):
     parameter: BookSchema = Field(...)
+
+
+class RequestRegister(BaseModel):
+    parameter: RegisterSchema = Field(...)
 
 
 class Response(GenericModel, Generic[T]):

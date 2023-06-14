@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from config import SessionLocal
 from sqlalchemy.orm import Session
-from schemas import RequestBook, Response
+from schemas import RequestBook, Response, RequestRegister
 import crud
 
 router = APIRouter()
@@ -23,7 +23,7 @@ async def create(request: RequestBook, db: Session = Depends(get_db)):
 
 @router.get("/")
 async def get(db: Session = Depends(get_db)):
-    _book = crud.get_book(db, 0, 100)
+    _book = crud.get_book(db, 0, 10)
     return Response(code=201, status='OK', message="Success Fetch all data", result=_book).dict(exclude_none=True)
 
 
@@ -34,7 +34,7 @@ async def get_by_id(id: int, db: Session = Depends(get_db)):
 
 
 @router.post("/update")
-async def update_book(request: RequestBook, db:Session = Depends(get_db)):
+async def update_book(request: RequestBook, db: Session = Depends(get_db)):
     _book = crud.update_book(db,
                              book_id=request.parameter.id,
                              title=request.parameter.title,
@@ -49,3 +49,7 @@ async def delete(id: int, db: Session = Depends(get_db)):
     return Response(code=200, status="OK", message="Success delete data").dict(exclude_none=True)
 
 
+@router.post('/register')
+async def register_user(request: RequestRegister, db: Session = Depends(get_db)):
+    crud.register_client(db, request.parameter)
+    return Response(code=204, status='Created', message='User created successfully')
